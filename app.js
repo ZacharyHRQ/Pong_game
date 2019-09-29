@@ -10,6 +10,9 @@ var paddleWidth = 75;
 var paddleX = (canvas.width - paddleWidth) / 2;
 var rightPressed = false;
 var leftPressed = false;
+var grd = ctx.createLinearGradient(0, 0, 200, 0);
+grd.addColorStop(0, "#00467f");
+grd.addColorStop(1, "#a5cc82");
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
@@ -33,14 +36,14 @@ function keyUpHandler(e) {
 function drawBall() {
   ctx.beginPath();
   ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-  ctx.fillStyle = "#0095DD";
+  ctx.fillStyle = grd;
   ctx.fill();
   ctx.closePath();
 }
 function drawPaddle() {
   ctx.beginPath();
   ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-  ctx.fillStyle = "#0095DD";
+  ctx.fillStyle = grd;
   ctx.fill();
   ctx.closePath();
 }
@@ -53,24 +56,26 @@ function draw() {
   if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
     dx = -dx;
   }
-  if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
+  if (y + dy < ballRadius) {
     dy = -dy;
+  } else if (y + dy > canvas.height - ballRadius) {
+    if (x > paddleX && x < paddleX + paddleWidth) {
+      dy = -dy;
+    } else {
+      alert("GAME OVER");
+      document.location.reload();
+      clearInterval(interval); // Needed for Chrome to end game
+    }
   }
 
-  if (rightPressed) {
+  if (rightPressed && paddleX < canvas.width - paddleWidth) {
     paddleX += 7;
-    if (paddleX + paddleWidth > canvas.width) {
-      paddleX = canvas.width - paddleWidth;
-    }
-  } else if (leftPressed) {
+  } else if (leftPressed && paddleX > 0) {
     paddleX -= 7;
-    if (paddleX < 0) {
-      paddleX = 0;
-    }
   }
 
   x += dx;
   y += dy;
 }
 
-setInterval(draw, 10);
+var interval = setInterval(draw, 10);
