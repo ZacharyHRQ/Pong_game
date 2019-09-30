@@ -1,6 +1,3 @@
-// var grd = ctx.createLinearGradient(0.5, 1, 200, 0);
-// grd.addColorStop(0, "#00467f");
-// grd.addColorStop(1, "#a5cc82");
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 var ballRadius = 10;
@@ -21,7 +18,9 @@ var brickPadding = 10;
 var brickOffsetTop = 30;
 var brickOffsetLeft = 30;
 var score = 0;
-
+var grd = ctx.createLinearGradient(0.5, 1, 200, 0);
+grd.addColorStop(0, "#00467f");
+grd.addColorStop(1, "#a5cc82");
 var bricks = [];
 for (var c = 0; c < brickColumnCount; c++) {
   bricks[c] = [];
@@ -76,14 +75,14 @@ function collisionDetection() {
 function drawBall() {
   ctx.beginPath();
   ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-  ctx.fillStyle = "#0095DD";
+  ctx.fillStyle = grd;
   ctx.fill();
   ctx.closePath();
 }
 function drawPaddle() {
   ctx.beginPath();
   ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-  ctx.fillStyle = "#0095DD";
+  ctx.fillStyle = grd;
   ctx.fill();
   ctx.closePath();
 }
@@ -97,7 +96,7 @@ function drawBricks() {
         bricks[c][r].y = brickY;
         ctx.beginPath();
         ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        ctx.fillStyle = "#0095DD";
+        ctx.fillStyle = grd;
         ctx.fill();
         ctx.closePath();
       }
